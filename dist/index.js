@@ -1,3 +1,5 @@
+import {getCLI} from "../src/aws";
+
 module.exports =
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
@@ -4207,7 +4209,8 @@ exports.getCLI = () => __awaiter(void 0, void 0, void 0, function* () {
     return io.which('aws', true);
 });
 exports.execCLI = (args) => __awaiter(void 0, void 0, void 0, function* () {
-    return execm.exec(yield exports.getCLI(), args, true).then(res => {
+    core.info(`The command being run is: ${getCLI()} ${args}`);
+    return execm.exec(yield exports.getCLI(), args, false).then(res => {
         if (res.stderr != '' && !res.success) {
             throw new Error(res.stderr);
         }
