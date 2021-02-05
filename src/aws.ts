@@ -1,6 +1,7 @@
 import * as semver from 'semver';
 import * as io from '@actions/io';
 import * as execm from './exec';
+import * as core from '@actions/core';
 
 const ecrRegistryRegex = /^(([0-9]{12})\.dkr\.ecr\.(.+)\.amazonaws\.com(.cn)?)(\/([^:]+)(:.+)?)?$/;
 
@@ -43,12 +44,16 @@ export const getCLI = async (): Promise<string> => {
 };
 
 export const execCLI = async (args: string[]): Promise<string> => {
-  return execm.exec(await getCLI(), args, true).then(res => {
+  core.info(`The command being run is: ${getCLI()} ${args}`);
+  return execm.exec(await getCLI(), args, false).then(res => {
     if (res.stderr != '' && !res.success) {
+      core.info('First part of if');
       throw new Error(res.stderr);
     } else if (res.stderr != '') {
+      core.info('Second part of if');
       return res.stderr.trim();
     } else {
+      core.info('Last part of if');
       return res.stdout.trim();
     }
   });
